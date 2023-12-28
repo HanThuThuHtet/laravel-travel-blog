@@ -1,0 +1,154 @@
+Creating own snippet
+setting -> user snippet -> php
+
+Date Time Ref
+Asia/Yangon => config => app.php
+
+composer require laravel/ui
+php artisan ui bootstrap --auth
+npm install && npm run dev
+npm i bootstrap-icons
+
+//env file update
+php artisan migrate
+php artisan make:model Article --all
+
+
+//store Article with user id
+add in article table
+php artisan migrate
+
+//store
+    //Model::create -> simple request with no logic
+    //new Model -> save() -> complex logic processing
+//nav -> @auth
+
+
+web => Auth::routes()
+//login logout register build-in
+
+Route
+Auth::routes([except_routes])
+Auth::routes([
+    "register" => false
+]);
+
+Middleware => Route->prefix() => path changing
+=> RedirectIfAuthenticated
+
+
+//Article Details => ArticleController
+edit => value="{{old('title',$article->title)}}"
+update => route('article.update',$article->id) => PUT method
+Request => UpdateArticleRequest => authorize -> true
+                                => rules()
+
+logic => instant
+no logic => array
+    //Model::create -> simple request with no logic
+    //new Model -> save() -> complex logic processing
+
+
+//Seeding
+factory -> seeder -> databaseSeeder
+
+php artisan migrate:fresh --seed
+
+normal => User::factory(10)->create();
+best technique (show log) => $this->call([
+            ArticleSeeder::class
+        ]);
+
+php artisan make:seeder UserSeeder
+
+//Category
+php artisan make:model Category --all
+//CategorySeeder => custom category title
+insert() => need to add created_at and updated_at manually
+
+//Authorization
+two ways => gate and policies
+Gate => Auth Service Provider => ArticleController
+define / allows / denies / authorize
+@can @cannot
+Gate response => allow , deny
+
+//Intercepting Gate Check => before (the first check)
+
+=>to solve Gate Issue => Policies
+
+php artisan make:model Name --all => include policies
+CategoryPolicies
+ArticlePolicies
+
+
+//Admin Managment
+user table => role
+user factory => ...
+user seeder => 'role' => 'admin'
+category seeder => rand dont need
+ php artisan migrate:fresh --seed
+
+UserPolicy => authserviceprovider
+CategoryPolicies => before fun for admin
+
+
+Can Middleware
+=> Middleware parameters => middleware('can:update') => can('update','post')
+=> ArticleController -> index -> condtion to show own post
+
+
+update with foreginId in migration file
+=> php artisan migrate:fresh --seed
+
+
+Eloquent:Relationship
+each article belongs to one user => Article model
+
+
+
+//home page
+=> php artisan make:controller PageController
+
+logical grouping
+=> and or condtion in query
+=> article controller
+
+Pretty URL
+ @foreach (App\Models\Category::all() as $category)
+    <a href="{{  route('index',["category"=>$category->id]) }}" class="list-group-item">{{$category->title}}</a>
+@endforeach
+
+
+//Recent Articles
+=> sidebar blade
+
+//Comment Feature
+php artisan make:model Comment --all
+
+//Comment Policies
+=> to allow op to delete Comment
+View => @can('delete', $comment) => UI
+CommentController => $this->authorize('delete',$comment); => Backend Request
+
+//Reply Comment
+Comment migration => $table->unsignedBigInteger("parent_id")->nullable();
+click reply => reply fomr d-none to d-flex => logic in js file
+@vite(["resources/js/reply.js"])
+
+Comment => parent_id => null => @forelse ($article->comments()->whereNull("parent_id") as $comment )
+Reply => parent_id => notnull => @forelse ($article->comments()->whereNull("parent_id") as $comment )
+
+create replies() in commentmodel
+
+
+
+
+
+
+
+
+
+
+
+Authenticated => Authorized

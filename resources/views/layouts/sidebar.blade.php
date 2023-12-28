@@ -1,0 +1,32 @@
+<div class=" position-sticky" style="top: 80px">
+    <div class=" search-form mb-3">
+        {{-- <p class="mb-2">Article Search</p> --}}
+        <form action="">
+            <div class="input-group">
+                <input type="text" class="form-control" name="keyword" placeholder="search article ..." value="{{request()->keyword}}">
+                <button class="btn btn-dark"><i class="bi bi-search"></i></button>
+            </div>
+        </form>
+    </div>
+    <div class="categories mb-3">
+        <p class="mb-2 fw-bold">Categories</p>
+        <div class="list-group">
+            <a href="{{  route('index') }}" class="list-group-item list-group-item-action">All</a>
+            @foreach (App\Models\Category::all() as $category)
+                <a href="{{  route('categorized',$category->slug) }}" class="list-group-item list-group-item-action">{{$category->title}}</a>
+            @endforeach
+        </div>
+    </div>
+
+    {{-- Recent articles --}}
+    <div class="recent-articles mb-3">
+        <p class="mb-2 fw-bold">Recent Articles</p>
+        <div class="list-group">
+
+            @foreach (App\Models\Article::latest("id")->limit(5)->get() as $article)
+                <a href="{{  route('detail',$article->slug) }}" class="list-group-item list-group-item-action">{{$article->title}}</a>
+            @endforeach
+        </div>
+    </div>
+
+</div>
